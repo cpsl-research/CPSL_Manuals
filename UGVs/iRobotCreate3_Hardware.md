@@ -1,4 +1,4 @@
-# iRobot Create 3 User Manual
+# iRobot Create 3 (Hardware Usage) User Manual
 
 ## Setup with RPi5 (ROS2 Jazzy)
 
