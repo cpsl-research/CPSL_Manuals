@@ -104,10 +104,10 @@ The following tutorials are useful for setting up the gazebo simulation
 
 4. To publish data from the 2D lidar sensor into ROS, we need to need to use the ros_gz_bridge ROS2 package. This should be able to be accomplished using the following command (or one similar to it)
     ```
-    ros2 run ros_gz_bridge parameter_bridge /world/walls/model/x500_lidar_2d_0/link/link/sensor/lidar_2d_v2/scan/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked
+    ros2 run ros_gz_bridge parameter_bridge /world/walls/model/x500_lidar_2d_0/link/link/sensor/lidar_2d_v2/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan
     ```
     - If everything is working correctly, you should now be able to run ```ros2 topic list``` and should see the topic displayed. Additionally, you should be able to view it in RVIZ as well using the ```rviz2``` command.
-    - **NOTE: Currently this isn't working at the moment. Need to figure out how to get the point cloud data publishing correctly.**
+    - Note: you will likely have to change the RVIZ2 frame id for this to work properly in the current context
 
 5. Finally, as an example of using ROS2, you can run the following ROS2 command to show an example of a launch file integration.
     ```
@@ -136,9 +136,9 @@ A good example/preview for how to control the PX4 using ROS2 can be found in the
 1. Start QGroundControl
 
 2. Start the MicroXRCEAgent to enable the ROS2 connection
-```
-MicroXRCEAgent udp -p 8888
-```
+    ```
+    MicroXRCEAgent udp -p 8888
+    ```
 3. Navigate to to the PX4-Autopilot directory and start the PX4-Autopilot application
     ```
     cd /path/to/PX4-Autopilot
