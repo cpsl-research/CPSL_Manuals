@@ -1,6 +1,6 @@
 # iRobot Create 3 (Hardware Usage) User Manual
 
-## Setup with RPi5 (ROS2 Jazzy)
+## [Setup/Installation] with RPi5 (ROS2 Jazzy)
 
 ### 1. Install and Setup Ubuntu 24.04
 
@@ -95,7 +95,7 @@ export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 export FASTRTPS_DEFAULT_PROFILES_FILE=/home/cpsl/Documents/fast_dds.xml
 ```
 3. Once this is completed, you should be able to follow the "Nominal Startup of RPi5 + Create3" instructions to confirm that everything is setup correctly. 
-## Nominal Startup of RPi5 + Create3:
+## [Nominal Startup/Running] of RPi5 + Create3:
 Once everything 
 1. Power/Reboot RPi5
 2. [If in headless mode] Restart the Nomachine/GDM server to be able to access NoMachine
