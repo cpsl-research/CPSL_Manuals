@@ -96,7 +96,10 @@ export FASTRTPS_DEFAULT_PROFILES_FILE=/home/cpsl/Documents/fast_dds.xml
 ```
 3. Once this is completed, you should be able to follow the "Nominal Startup of RPi5 + Create3" instructions to confirm that everything is setup correctly. 
 ## [Nominal Startup/Running] of RPi5 + Create3:
-Once everything 
+Once everything is installed, the following steps can be followed to use the iRobotCreate3:
+
+### 1. Connecting to the iRobotCreate3
+
 1. Power/Reboot RPi5
 2. [If in headless mode] Restart the Nomachine/GDM server to be able to access NoMachine
 3. Restart/check the NTP server
@@ -110,6 +113,18 @@ sudo chronyc clients
     - Log out and then back into the RPi5
     - Restart the NTP server again and wait until there is a confirmed connection with Create3 (should take a few minutes)
 
+### 2. Undocking the robot:
+To undock the robot, send the following action command:
+
+```
+ros2 action send_goal /undock irobot_create_msgs/action/Undock "{}"
+```
+
+### 3. Docking the robot:
+Once donce with the robot, send the following action command to redock the robot:
+```
+ros2 action send_goal /dock irobot_create_msgs/action/Dock "{}"
+```
 
 ## Helpful Instructions
 

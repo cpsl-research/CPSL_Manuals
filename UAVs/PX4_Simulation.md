@@ -137,7 +137,7 @@ A good example/preview for how to control the PX4 using ROS2 can be found in the
 
 2. Start the MicroXRCEAgent to enable the ROS2 connection
     ```
-    MicroXRCEAgent udp -p 8888
+    MicroXRCEAgent udp4 -p 8888
     ```
 3. Navigate to to the PX4-Autopilot directory and start the PX4-Autopilot application
     ```
@@ -158,4 +158,4 @@ A good example/preview for how to control the PX4 using ROS2 can be found in the
 - [ROS_GZ_Bridge Tutorial](https://gazebosim.org/docs/harmonic/ros2_integration/)
 - [ROS_GZ_Bridge Github readme](https://github.com/gazebosim/ros_gz/tree/jazzy/ros_gz_bridge)
 - [Gazebo Tutorials](https://gazebosim.org/docs/harmonic/tutorials/)
-
+- [uORB Message Definitions](https://docs.px4.io/main/en/msg_docs/)
