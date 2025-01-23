@@ -50,11 +50,16 @@ Before setting up the PX4/ROS, QGroundControl must also be installed. Follow the
 4. Finally, in order to read/write PX4 message in ROS, the px4_ros_com and px4_msgs ROS2 packages must be included in ROS2 workspace's source directory (change ROS_PX4_2_WS to the desired ws)
     ```
     cd ROS_PX4_2_WS/src
-    git clone https://github.com/PX4/px4_msgs.git
-    git clone https://github.com/PX4/px4_ros_com.git
+    git clone --recurse-submodules https://github.com/cpsl-research/CPSL_ROS2_PX4.git
     ```
-    - NOTE: **TODO** create a git repo for CPSL tasks that already includes these as submodules as needed
-    - When ready to build the final set of packages, run the following command to build the messages
+
+If you forgot to clone the submodules as well, you can use the following command:
+    ```
+    git submodule update --init --recursive
+    ```
+
+Once, cloned, the following commands can be used to build/install the necessary packages
+
     ```
     cd ROS_PX4_2_WS
     colcon build
@@ -89,17 +94,17 @@ The following tutorials are useful for setting up the gazebo simulation
 
 1. Start QGroundControl
 
-2. Start the MicroXRCEAgent to enable the ROS2 connection
-    ```
-    MicroXRCEAgent udp4 -p 8888
-    ```
-
-3. Navigate to to the PX4-Autopilot directory and start the PX4-Autopilot application
+2. Navigate to to the PX4-Autopilot directory and start the PX4-Autopilot application
     ```
     cd /path/to/PX4-Autopilot
     PX4_GZ_WORLD=walls make px4_sitl gz_x500_lidar_2d
     ```
     - Note: ```PX4_GZ_WORLD=walls``` specifies the "walls" environment instead of the default blank environment, and ```make px4_sitl gz_x500_lidar_2d``` specifies a X500 UAV equiped with a 2D lidar scanner
+
+3. Start the MicroXRCEAgent to enable the ROS2 connection
+    ```
+    MicroXRCEAgent udp4 -p 8888
+    ```
 
 
 4. To publish data from the 2D lidar sensor into ROS, we need to need to use the ros_gz_bridge ROS2 package. This should be able to be accomplished using the following command (or one similar to it)
