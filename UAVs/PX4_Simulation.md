@@ -23,19 +23,7 @@ Before setting up the PX4/ROS, QGroundControl must also be installed. Follow the
     source /opt/ros/jazzy/setup.bash 
     ```
 
-2. As we will be using a gazebo simulation, at times it will be helpful to read ground truth data from the gazebo simulation environment into our ROS environment. This can be accomplished by installing the ros_gz bridge using the following commands (see [ros_gz readme](https://github.com/gazebosim/ros_gz/tree/jazzy) for more details):
-    - First, add packages.ros.org to the OS so that it can find the pre-build binary
-    ```
-    sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-    sudo apt-get update
-    ```
-    - Next, install the ros_gz package for ROS2 Jazzy
-    ```
-    sudo apt install ros-jazzy-ros-gz
-    ```
-
-3. To enable connecting to the PX4 over ethernet using ROS2, the XRCE-DDS Client must be installed. To do so, follow the instructions for "Setup Micro XRCE-DDS Agent & Client" at the [PX4 ROS2 User Guide](https://docs.px4.io/v1.15/en/ros2/user_guide.html#setup-micro-xrce-dds-agent-client). Essentially the following commands will be executed:
+2. To enable connecting to the PX4 over ethernet using ROS2, the XRCE-DDS Client must be installed. To do so, follow the instructions for "Setup Micro XRCE-DDS Agent & Client" at the [PX4 ROS2 User Guide](https://docs.px4.io/v1.15/en/ros2/user_guide.html#setup-micro-xrce-dds-agent-client). Essentially the following commands will be executed:
     - Install the Micro-XRCE-DDS-Agent
     ```
     git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
@@ -47,18 +35,18 @@ Before setting up the PX4/ROS, QGroundControl must also be installed. Follow the
     sudo make install
     sudo ldconfig /usr/local/lib/
     ```
-4. Finally, in order to read/write PX4 message in ROS, the px4_ros_com and px4_msgs ROS2 packages must be included in ROS2 workspace's source directory (change ROS_PX4_2_WS to the desired ws)
+3. Finally, in order to read/write PX4 message in ROS, the px4_ros_com and px4_msgs ROS2 packages must be included in ROS2 workspace's source directory (change ROS_PX4_2_WS to the desired ws)
     ```
     cd ROS_PX4_2_WS/src
     git clone --recurse-submodules https://github.com/cpsl-research/CPSL_ROS2_PX4.git
     ```
 
-If you forgot to clone the submodules as well, you can use the following command:
+    If you forgot to clone the submodules as well, you can use the following command:
     ```
     git submodule update --init --recursive
     ```
 
-Once, cloned, the following commands can be used to build/install the necessary packages
+    Once, cloned, the following commands can be used to build/install the necessary packages
 
     ```
     cd ROS_PX4_2_WS
@@ -68,23 +56,25 @@ Once, cloned, the following commands can be used to build/install the necessary 
 
 ### 3. Install Gazebo Harmonic through the Gazebo/ROS Paring
 To simulate the UAV using Gazebo, the correct version of Gazebo must be installed (in this case Gazebo Harmonic). To achieve this, follow the [Gazebo Installation Guide (via ROS2)](https://gazebosim.org/docs/latest/ros_installation/). Ultimately, the only command that should need to be run to get Gazebo up and running is the following:
-```
-sudo apt-get install ros-jazzy-ros-gz
-```
+    ```
+    sudo apt-get install ros-jazzy-ros-gz
+    ```
 
 ### 4.Install/Build the PX4 firmware (needed for simulation)
 Once ROS2, Gazebo, and QGroundControl are installed, we will then move to install the PX4 Source Code. While the following steps should help, helpful documentation can be found at [checkout release versions](https://docs.px4.io/v1.15/en/contribute/git_examples.html#get-a-specific-release) and [Ubuntu Setup](https://docs.px4.io/main/en/dev_setup/dev_env_linux_ubuntu.html). To do so, perform the following steps:
 1. Clone the PX4 Source Code:
-```
-git clone https://github.com/PX4/PX4-Autopilot.git --recursive
-```
+    ```
+    git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+    ```
 
 2. Although not stated in the v1.15 guide, there should also be an Ubuntu setup script which can be used to make sure that all of the software is correctly setup for ubuntu. This can be run using the following command(as documented in [Ubuntu Setup (Main) guide](https://docs.px4.io/main/en/dev_setup/dev_env_linux_ubuntu.html)):
-```
-bash ./PX4-Autopilot/Tools/setup/ubuntu.sh --no-sim-tools
-```
+    ```
+    bash ./PX4-Autopilot/Tools/setup/ubuntu.sh --no-sim-tools
+    ```
 
-Note: the --no-sim-tools is used because we already installed Gazebo
+    Note: the --no-sim-tools is used because we already installed Gazebo
+
+3. Finally, reboot the machine to make sure that everything installs correctly.
 
 ## [Running] Simulations
 
