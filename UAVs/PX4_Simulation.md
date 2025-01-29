@@ -109,6 +109,34 @@ The following tutorials are useful for setting up the gazebo simulation
     ros2 run px4_ros_com offboard_control
     ```
 
+### 1. X500 with 2D Lidar Sensor ("walls" world) using ROS2 integration key operation
+
+1. Start QGroundControl
+
+2. Navigate to to the PX4-Autopilot directory and start the PX4-Autopilot application
+    ```
+    cd /path/to/PX4-Autopilot
+    PX4_GZ_WORLD=walls make px4_sitl gz_x500_lidar_2d
+    ```
+    - Note: ```PX4_GZ_WORLD=walls``` specifies the "walls" environment instead of the default blank environment, and ```make px4_sitl gz_x500_lidar_2d``` specifies a X500 UAV equiped with a 2D lidar scanner
+
+3. Start the MicroXRCEAgent to enable the ROS2 connection
+    ```
+    MicroXRCEAgent udp4 -p 8888
+    ```
+
+
+4. To publish data from the 2D lidar sensor into ROS, we need to need to use the ros_gz_bridge ROS2 package. This should be able to be accomplished using the following command (or one similar to it)
+    ```
+    ros2 run ros_gz_bridge parameter_bridge /world/walls/model/x500_lidar_2d_0/link/link/sensor/lidar_2d_v2/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan
+    ```
+    - If everything is working correctly, you should now be able to run ```ros2 topic list``` and should see the topic displayed. Additionally, you should be able to view it in RVIZ as well using the ```rviz2``` command.
+    - Note: you will likely have to change the RVIZ2 frame id for this to work properly in the current context
+
+5. Finally, launch the keyop controller using the following commands
+    ```
+    ros2 launch px4_controller keyop_control_launch.py
+    ```
 ## [Tutorials]
 
 Below are several helpful tutorials to access data from a gazebo simulation in ROS
