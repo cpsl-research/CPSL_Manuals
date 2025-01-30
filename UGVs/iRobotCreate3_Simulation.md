@@ -30,7 +30,27 @@ The following steps can be used to setup a gazebo simulation of a TurtleBot4 wit
     ```
     sudo apt install ros-jazzy-ros-gz
     ```
-3. Finally manually install the turtlebot3 simulator from source into the desired ROS2 workspace
+3. Finally, in order to read/write commands/data to the Create3, we must install a series of packages
+    ```
+    git clone --recurse-submodules https://github.com/cpsl-research/CPSL_ROS2_Create3
+    ```
+
+    If you forgot to clone the submodules as well, you can use the following command:
+    ```
+    git submodule update --init --recursive
+    ```
+
+    Once, cloned, the following commands can be used to build/install the necessary packages
+
+    ```
+    cd CPSL_ROS2_Create3
+    colcon build --symlink-install
+    source install/setup.bash
+    rosdep install -i --from-path src --rosdistro jazzy -y
+    ```
+
+### 2. Setup Turtlebot 4 simulator
+1. Finally manually install the turtlebot3 simulator from source into the desired ROS2 workspace
     - First, navigate to the desired ROS2 workspace's source directory (replace turtlebot4_ws with the path to your workspace)
     ```
     cd turtlebot4_ws/src
@@ -49,18 +69,45 @@ The following steps can be used to setup a gazebo simulation of a TurtleBot4 wit
     colcon build --symlink-install
     ```
 
-### 2. Install Gazebo Harmonic through the Gazebo/ROS Paring
-To simulate the UAV using Gazebo, the correct version of Gazebo must be installed (in this case Gazebo Harmonic). To achieve this, follow the [Gazebo Installation Guide (via ROS2)](https://gazebosim.org/docs/latest/ros_installation/). Ultimately, the only command that should need to be run to get Gazebo up and running is the following:
-```
-sudo apt-get install ros-jazzy-ros-gz
-```
-
-## - For Simulating iRobotCreate3 on Gazebo Harmonic with ROS2 Jazzy on Ubuntu 24.04 using a iRobotCreate3 Simulation
-
-This part needs to be updated, but we should be able to follow the instructions on this github repository [iRobot Create3 Simulator github](https://github.com/iRobotEducation/create3_sim/tree/jazzy)
-
 ## Tutorials/Basic Usage
 
+### 1. Start basic sumulator
+
+To run a basic simulation on of the turtlebot4, perform the following steps:
+
+```
+cd turtlebot4_ws
+source install/setup.bash
+ros2 launch turtlebot4_gz_bringup turtlebot4_gz.launch.py
+```
+
+### 2. Undocking the robot:
+To undock the robot, send the following action command:
+
+```
+ros2 action send_goal /undock irobot_create_msgs/action/Undock "{}"
+```
+
+### 3. Docking the robot:
+Once donce with the robot, send the following action command to redock the robot:
+```
+ros2 action send_goal /dock irobot_create_msgs/action/Dock "{}"
+```
+
+### 4. Controlling the vehicle with keyboard operation
+```
+cd CPSL_ROS2_Create3
+source install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cmd_vel_unstamped
+```
+
+### 5. Accessing the lidar scan
+1. Open Rviz
+```
+rviz2
+```
+2. Add a LaserScan topic, and set it to subscribe to the "/scan" topic of the turtlebot. For better visualization, I recommend using the "Points" style. 
+3. To view the lidar scan data in the frame of the turtlebot4, set the Fixed frame to ```turtlebot4/rplidar_link/rplidar```
 
 ## Helpful Instructions
 

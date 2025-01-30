@@ -47,10 +47,27 @@ To setup NTP (network time protocol) on the compute board in order to synchroniz
 1. Install ROS2 Jazzy by following the instructions here: [ROS2 Jazzy Installation Guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 
 2. Once ROS is installed, install the create3 messages for ROS2 Jazzy using the following command:
-```
-sudo apt install -y ros-jazzy-irobot-create-msgs
-```
+    ```
+    sudo apt install -y ros-jazzy-irobot-create-msgs
+    ```
+3. Finally, in order to read/write commands/data to the Create3, we must install a series of packages
+    ```
+    git clone --recurse-submodules https://github.com/cpsl-research/CPSL_ROS2_Create3
+    ```
 
+    If you forgot to clone the submodules as well, you can use the following command:
+    ```
+    git submodule update --init --recursive
+    ```
+
+    Once, cloned, the following commands can be used to build/install the necessary packages
+
+    ```
+    cd CPSL_ROS2_Create3
+    colcon build --symlink-install
+    source install/setup.bash
+    rosdep install -i --from-path src --rosdistro jazzy -y
+    ```
 ### 5. Setting ROS2 Middleware
 In order to connect to the Create3 using ROS, the correct MiddleWare and discovery settings must be applied.. The 1st option should work just fine, but you may need to try the second option as well 
 
@@ -117,13 +134,20 @@ sudo chronyc clients
 To undock the robot, send the following action command:
 
 ```
-ros2 action send_goal /undock irobot_create_msgs/action/Undock "{}"
+ros2 action send_goal /cpslCreate3/undock irobot_create_msgs/action/Undock "{}"
 ```
 
 ### 3. Docking the robot:
 Once donce with the robot, send the following action command to redock the robot:
 ```
-ros2 action send_goal /dock irobot_create_msgs/action/Dock "{}"
+ros2 action send_goal /cpslCreate3/dock irobot_create_msgs/action/Dock "{}"
+```
+
+### 4. Controlling the vehicle with keyboard operation
+```
+cd CPSL_ROS2_Create3
+source install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpslCreate3/cmd_vel
 ```
 
 ## Helpful Instructions
