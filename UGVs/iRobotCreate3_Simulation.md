@@ -68,6 +68,10 @@ The following steps can be used to setup a gazebo simulation of a TurtleBot4 wit
     ```
     colcon build --symlink-install
     ```
+2. To enable correct laserscan rendering/simulation, you must change the default renderer being used by the gazebo simulation. To do this, navigate to the file ```/opt/ros/jazzy/share/irobot_create_description/urdf/create3.urdf.xacro``` and open it.
+    - Next, look for the line that says ```<render_engine>ogre</render_engine>```
+    - Replace that line with the following: ```<render_engine>ogre2</render_engine>```
+    - The simulation should now continue to work nominally.
 
 ## Tutorials/Basic Usage
 

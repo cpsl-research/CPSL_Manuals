@@ -167,10 +167,17 @@ A good example/preview for how to control the PX4 using ROS2 can be found in the
     cd /path/to/PX4-Autopilot
     make px4_sitl gz_x500
     ```
-4. Launch the example (will arm, ascend 5 meters, then wait):
+4. Navigate to the CPSL_ROS2_PX4 ROS2 package folder
     ```
-    ros2 run px4_ros_com offboard_control
+    cd CPSL_ROS2_PX4
+    source install/setup.bash
+    ros2 launch px4_controller keyop_control_launch.py
     ```
+    The currently implemented keyop controls are as follows:
+    - "a" - arm the UAV
+    - "d" - disarm the UAV
+    - "t" - takeoff
+    - "l" - land
 
 ## Helpful Links: 
 - [Building PX4 firmware instructions](https://docs.px4.io/v1.15/en/dev_setup/building_px4.html#nuttx-pixhawk-based-boards)
