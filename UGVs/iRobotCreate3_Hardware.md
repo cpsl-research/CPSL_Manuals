@@ -1,5 +1,12 @@
 # iRobot Create 3 (Hardware Usage) User Manual
 
+## - For Using iRobotCreate3 on Raspberri Pi5 with ROS2 Jazzy on Ubuntu 24.04
+
+The following steps can be used to scontrol an iRobot Create3 with the following versions/software.
+
+- ROS Version: ROS2 Jazzy
+- Ubuntu Version: Ubuntu 24.04
+
 ## [Setup/Installation] with RPi5 (ROS2 Jazzy)
 
 ### 1. Install and Setup Ubuntu 24.04
@@ -143,12 +150,69 @@ Once donce with the robot, send the following action command to redock the robot
 ros2 action send_goal /cpslCreate3/dock irobot_create_msgs/action/Dock "{}"
 ```
 
-### 4. Controlling the vehicle with keyboard operation
+### 4. Resetting the robot pose (say at a particular origin)
+If you want to reset the pose to a specific location, you can use the following service
+```
+ros2 service call /cpslCreate3/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
+```
+
+### 5. Controlling the vehicle with keyboard operation
 ```
 cd CPSL_ROS2_Create3
 source install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpslCreate3/cmd_vel
 ```
+
+### 6.Generating a map
+1. [terminal 1] Undock the robot, reset navigate to the location that you want the map to be centered at:
+
+```
+cd CPSL_ROS2_Create3
+ros2 action send_goal /cpslCreate3/undock irobot_create_msgs/action/Undock "{}"
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpslCreate3/cmd_vel
+```
+
+- If desired, the pose can also be reset to a specific point so that the odom and map origins start out as the same point using the following command 
+    ```
+    {ros2 service call /cpslCreate3/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"}
+    ```
+
+2. [terminal 2] Launch all of the requisite sensors using the CPSL_ROS2_Sensors package
+```
+cd CPSL_ROS2_Sensors
+source install/setup.bash
+ros2 launch cpsl_ros2_sensors_bringup ugv_sensor_bringup.launch.py namespace:=/cpslCreate3 lidar_enable:=true lidar_scan_enable:=true radar_enable:=true platform_description_enable:=true rviz:=false
+```
+The parameters that can be used here are as follows: 
+| **Parameter** | **Default** | **Description** |  
+|-----------|--------------------------|---------------------------------------------|  
+| `namespace`   | ''  | the namespace of the robot |  
+| `lidar_enable`| true | on True, starts the livox lidar node
+| `lidar_scan_enable`| false | on True, publishes a laserscan version of the livox's PC2 topic on /livox/lidar
+| `radar_enable`| true | On True, launch the (front and back) TI radars
+| `platform_description_enable`| true | On true, publishes the UGV robot description tf tree
+| `rviz`| true | On True, displays an RViz window of sensor data
+
+3. [terminal 3] Finally, run the slam pipeline using the CPSL_ROS2_Nav packages
+```
+cd CPSL_ROS2_Nav
+source install/setup.bash
+ros2 launch cpsl_nav slam.launch.py namespace:=/cpslCreate3 scan_topic:=/livox/scan
+```
+When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
+| **Parameter** | **Default** | **Description** |
+|----------------|--------------|------------------------------------------------------|
+|`use_sim_time`|false|Use the time from a Gazebo simulation|
+|`sync`|true|use synchronous SLAM (slower than asyncrhonous SLAM)|
+|`namespace`|''|The robot's namespace|
+|`scan_topic`|'/scan'|The LaserScan topic to use for slam|
+|`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
+|`use_lifecycle_manager`| false| Enable bond connection during node activation| 
+|`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
+|`rviz`|false|Display an RViz window with navigation|
+
+4.  Once finished, use one of the following two methods to save the generated map
+    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and slick the "Save Map" button. The file will be saved in the current directory
 
 ## Helpful Instructions
 

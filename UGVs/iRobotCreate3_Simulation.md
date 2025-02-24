@@ -4,14 +4,6 @@ The following guide was created to setup the PX4 simulation environment in order
 
 ## [Setup/Installation] 
 
-## - For Simulating iRobotCreate3 on Gazebo Harmonic with ROS2 Jazzy on Ubuntu 24.04 using a TurtleBot4
-
-The following steps can be used to setup a gazebo simulation of a TurtleBot4 with the following versions/software. Note, that the TurtleBot4 is built on top of the Create3 and so the CPSL's create3 may not come with all of the hardware available on the TurtleBot4
-
-- Gazebo Version: GZ Harmonic
-- ROS Version: ROS2 Jazzy
-- Ubuntu Version: Ubuntu 24.04
-
 ### 1. Install ROS2 Jazzy
 1. Install ROS2 Jazzy by following the instructions here: [ROS2 Jazzy Installation Guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
     - NOTE: If you are setting up ROS2 for your user acount on a machine that already has ROS2 installed on it, you should just be able to add the following command (or one similar to it) to your .bashrc file
