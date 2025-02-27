@@ -138,30 +138,102 @@ sudo chronyc clients
     - Restart the NTP server again and wait until there is a confirmed connection with Create3 (should take a few minutes)
 
 ### 2. Undocking the robot:
-To undock the robot, send the following action command:
+To undock the robot, send one of the following action commands:
 
 ```
+#for custom namespace
 ros2 action send_goal /cpslCreate3/undock irobot_create_msgs/action/Undock "{}"
+
+#for no custom namespace
+ros2 action send_goal /undock irobot_create_msgs/action/Undock "{}" 
 ```
 
 ### 3. Docking the robot:
 Once donce with the robot, send the following action command to redock the robot:
 ```
+#with custom namespace
 ros2 action send_goal /cpslCreate3/dock irobot_create_msgs/action/Dock "{}"
+
+#for no custom namespace 
+ros2 action send_goal /dock irobot_create_msgs/action/Dock "{}"
 ```
 
 ### 4. Resetting the robot pose (say at a particular origin)
 If you want to reset the pose to a specific location, you can use the following service
 ```
+#with custom namespace
 ros2 service call /cpslCreate3/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
+
+#without custom namespace
+ros2 service call /reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
+
 ```
 
 ### 5. Controlling the vehicle with keyboard operation
 ```
+#with custom namespace
 cd CPSL_ROS2_Create3
 source install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpslCreate3/cmd_vel
+
+#without custom namespace
+cd CPSL_ROS2_Create3
+source install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
+### 6. Republish tf tree from create3
+If you want to access the tf tree from the create3 on another server or device, you can run this simple node. It will republish the /tf topic on /forwarded_tf
+```
+cd CPSL_ROS2_Create3
+source install/setup.bash
+ros2 run tf_repub tf_repub
+```
+This will re-publish the tf tree from the RPI5 and make it available to any other edge devices that may be connected to it
+
+### 7. Start all sensors with CPSL_ROS2_Sensors
+If already configured, the sensors can be started using the following command:
+```
+cd CPSL_ROS2_Sensors
+source install/setup.bash
+ros2 launch cpsl_ros2_sensors_bringup ugv_sensor_bringup.launch.py lidar_enable:=true lidar_scan_enable:=true radar_enable:=true platform_description_enable:=true rviz:=false
+```
+The parameters that can be used here are as follows: 
+| **Parameter** | **Default** | **Description** |  
+|-----------|--------------------------|---------------------------------------------|  
+| `namespace`   | ''  | the namespace of the robot |  
+| `lidar_enable`| true | on True, starts the livox lidar node
+| `lidar_scan_enable`| false | on True, publishes a laserscan version of the livox's PC2 topic on /livox/lidar
+| `radar_enable`| true | On True, launch the (front and back) TI radars
+| `platform_description_enable`| true | On true, publishes the UGV robot description tf tree
+| `rviz`| true | On True, displays an RViz window of sensor data
+
+### 8. Start GNN ROS2 Nodes
+If the CPSL_ROS2_PCProcessing package has already been setup, the following code will start the relevant Nodes
+
+1. go into the CPSL_ROS2_PC_Processing directory
+```
+cd CPSL_ROS2_PCProcessing
+```
+2. activate the poetry shell
+```
+poetry shell
+```
+4. Source the setup.bash file
+```
+source install/setup.bash
+```
+5. Finally, launch the ugv_gnn_bringup file
+```
+ros2 launch pc_processing ugv_gnn_bringup.launch.py
+```
+
+When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
+| **Parameter** | **Default** | **Description** |
+|----------------|--------------|------------------------------------------------------|
+|`namespace`|''|The robot's namespace|
+|`param_file`| 'ugv_gnn.yaml'|YAML file with parameters for the nodes in the configs directory|
+|`model_state_dict`| 'Sage_10fp_20fh_0_50_th_5mRng_0_2_res.pth'|.pth config file in the model_state_dicts folder|
+|`scan_enable`| 'false'|If enabled, additionally publish a /LaserScan message on the radar_combined/scan topic|
 
 ### 6.Generating a map
 1. [terminal 1] Undock the robot, reset navigate to the location that you want the map to be centered at:
@@ -222,6 +294,8 @@ Note, the following instructions only need to be performed once. To run NoMachin
 sudo systemctl stop gdm
 sudo /etc/NX/nxserver --restart
 ```
+
+
 ## Helpful Documentation
 - [Create 3 RPi4 Setup Guide](https://iroboteducation.github.io/create3_docs/setup/pi4humble/): Note that this guide is meant for RPi4 running Ubuntu 22.04, as its recommended to only use this as reference and instead follow the instructions above if you need help.
 - [Create 3 Adapter Board Documentation ](https://iroboteducation.github.io/create3_docs/hw/adapter/)
