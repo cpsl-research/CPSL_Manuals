@@ -224,7 +224,7 @@ source install/setup.bash
 ```
 5. Finally, launch the ugv_gnn_bringup file
 ```
-ros2 launch pc_processing ugv_gnn_bringup.launch.py
+ros2 launch pc_processing ugv_gnn_bringup.launch.py scan_enable:=true
 ```
 
 When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
@@ -235,6 +235,40 @@ When launching, the following parameters can also be set by using the `parameter
 |`model_state_dict`| 'Sage_10fp_20fh_0_50_th_5mRng_0_2_res.pth'|.pth config file in the model_state_dicts folder|
 |`scan_enable`| 'false'|If enabled, additionally publish a /LaserScan message on the radar_combined/scan topic|
 
+### 6. Starting SLAM Stack (radar)
+Once sensors are running, the following command can start the SLAM pipeline
+```
+cd CPSL_ROS2_Nav
+source install/setup.bash
+ros2 launch cpsl_nav slam.launch.py namespace:=/cpslCreate3 scan_topic:=/livox/scan
+```
+When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
+| **Parameter** | **Default** | **Description** |
+|----------------|--------------|------------------------------------------------------|
+|`use_sim_time`|false|Use the time from a Gazebo simulation|
+|`sync`|true|use synchronous SLAM (slower than asyncrhonous SLAM)|
+|`namespace`|''|The robot's namespace|
+|`scan_topic`|'/scan'|The LaserScan topic to use for slam|
+|`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
+|`use_lifecycle_manager`| false| Enable bond connection during node activation| 
+|`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
+|`rviz`|false|Display an RViz window with navigation|
+
+
+### 7 Starting localization (radar)
+
+```
+cd CPSL_ROS2_Nav
+source install/setup.bash
+ros2 launch cpsl_nav localization.launch.py scan_topic:=/radar_combined/scan map:=wilk_radar.yaml param_file:=localization_radar.yaml
+```
+
+### 8. Starting navigation 
+```
+cd CPSL_ROS2_Nav
+soruce install/setup.bash
+ros2 launch cpsl_nav nav2_backup.launch.py scan_topic:=/radar_combined/scan
+```
 ### 6.Generating a map
 1. [terminal 1] Undock the robot, reset navigate to the location that you want the map to be centered at:
 
