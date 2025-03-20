@@ -303,7 +303,7 @@ The parameters that can be used here are as follows:
 ```
 cd CPSL_ROS2_Nav
 source install/setup.bash
-ros2 launch cpsl_nav slam.launch.py namespace:=/cpslCreate3 scan_topic:=/livox/scan
+ros2 launch cpsl_nav slam.launch.py slam_params_file:=slam_radar.yaml scan_topic:=/radar_combined/scan
 ```
 When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
 | **Parameter** | **Default** | **Description** |
@@ -327,6 +327,11 @@ Note, the following instructions only need to be performed once. To run NoMachin
 ```
 sudo systemctl stop gdm
 sudo /etc/NX/nxserver --restart
+```
+
+### 2. Starting RViz on edge server
+```
+rviz2 --ros-args --remap /tf:=/forwarded_tf
 ```
 
 
