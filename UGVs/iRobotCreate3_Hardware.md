@@ -235,71 +235,8 @@ When launching, the following parameters can also be set by using the `parameter
 |`model_state_dict`| 'Sage_10fp_20fh_0_50_th_5mRng_0_2_res.pth'|.pth config file in the model_state_dicts folder|
 |`scan_enable`| 'false'|If enabled, additionally publish a /LaserScan message on the radar_combined/scan topic|
 
-### 6. Starting SLAM Stack (radar)
+### 9. Starting SLAM Stack (radar)
 Once sensors are running, the following command can start the SLAM pipeline
-```
-cd CPSL_ROS2_Nav
-source install/setup.bash
-ros2 launch cpsl_nav slam.launch.py namespace:=/cpslCreate3 scan_topic:=/livox/scan
-```
-When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
-| **Parameter** | **Default** | **Description** |
-|----------------|--------------|------------------------------------------------------|
-|`use_sim_time`|false|Use the time from a Gazebo simulation|
-|`sync`|true|use synchronous SLAM (slower than asyncrhonous SLAM)|
-|`namespace`|''|The robot's namespace|
-|`scan_topic`|'/scan'|The LaserScan topic to use for slam|
-|`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
-|`use_lifecycle_manager`| false| Enable bond connection during node activation| 
-|`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
-|`rviz`|false|Display an RViz window with navigation|
-
-
-### 7 Starting localization (radar)
-
-```
-cd CPSL_ROS2_Nav
-source install/setup.bash
-ros2 launch cpsl_nav localization.launch.py scan_topic:=/radar_combined/scan map:=wilk_radar.yaml param_file:=localization_radar.yaml
-```
-
-### 8. Starting navigation 
-```
-cd CPSL_ROS2_Nav
-soruce install/setup.bash
-ros2 launch cpsl_nav nav2_backup.launch.py scan_topic:=/radar_combined/scan
-```
-### 6.Generating a map
-1. [terminal 1] Undock the robot, reset navigate to the location that you want the map to be centered at:
-
-```
-cd CPSL_ROS2_Create3
-ros2 action send_goal /cpslCreate3/undock irobot_create_msgs/action/Undock "{}"
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpslCreate3/cmd_vel
-```
-
-- If desired, the pose can also be reset to a specific point so that the odom and map origins start out as the same point using the following command 
-    ```
-    {ros2 service call /cpslCreate3/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"}
-    ```
-
-2. [terminal 2] Launch all of the requisite sensors using the CPSL_ROS2_Sensors package
-```
-cd CPSL_ROS2_Sensors
-source install/setup.bash
-ros2 launch cpsl_ros2_sensors_bringup ugv_sensor_bringup.launch.py namespace:=/cpslCreate3 lidar_enable:=true lidar_scan_enable:=true radar_enable:=true platform_description_enable:=true rviz:=false
-```
-The parameters that can be used here are as follows: 
-| **Parameter** | **Default** | **Description** |  
-|-----------|--------------------------|---------------------------------------------|  
-| `namespace`   | ''  | the namespace of the robot |  
-| `lidar_enable`| true | on True, starts the livox lidar node
-| `lidar_scan_enable`| false | on True, publishes a laserscan version of the livox's PC2 topic on /livox/lidar
-| `radar_enable`| true | On True, launch the (front and back) TI radars
-| `platform_description_enable`| true | On true, publishes the UGV robot description tf tree
-| `rviz`| true | On True, displays an RViz window of sensor data
-
-3. [terminal 3] Finally, run the slam pipeline using the CPSL_ROS2_Nav packages
 ```
 cd CPSL_ROS2_Nav
 source install/setup.bash
@@ -311,15 +248,37 @@ When launching, the following parameters can also be set by using the `parameter
 |`use_sim_time`|false|Use the time from a Gazebo simulation|
 |`sync`|true|use synchronous SLAM (slower than asyncrhonous SLAM)|
 |`namespace`|''|The robot's namespace|
-|`scan_topic`|'/scan'|The LaserScan topic to use for slam|
+|`scan_topic`|'/scan'|The LaserScan topic to use for slam (`/radar_combined/scan` for radar, `/livox/scan/` for lidar)|
 |`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
 |`use_lifecycle_manager`| false| Enable bond connection during node activation| 
 |`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
 |`rviz`|false|Display an RViz window with navigation|
 
-4.  Once finished, use one of the following two methods to save the generated map
-    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and slick the "Save Map" button. The file will be saved in the current directory
+Once finished, open Rviz and use the slam rviz configuration in the cpsl_ros2_nav2 package to view/save the map.
+    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and slick the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
 
+### 10. Starting localization (radar)
+In stead of SLAM, you can run a localization pipeline and navigation (see next step). To start localizaiton, Run the following steps:
+
+1. Open RVIZ2 and use the either the nav_config.rviz or slam_config.rviz files in CPSL_ROS2_Nav/src/cpsl_nav/rviz_cfgs. This must be done first in order for the map to appear. When started, you will not see anything until the next step as the nav2 pipeline publishes the map->odom transformation.
+
+2. Drive the UGV around to make sure that the point clouds are publishing correclty. 
+
+3. run the following commands. Change the map file to be the name of a map in the CPSL_ROS2_Nav/src/cpsl_nav/maps folder. 
+```
+cd CPSL_ROS2_Nav
+source install/setup.bash
+ros2 launch cpsl_nav localization.launch.py scan_topic:=/radar_combined/scan map:=wilk_radar.yaml param_file:=localization_radar.yaml
+```
+4. Once launched, you will then have to set a start location. Wait for the map to appear in the rviz window. Then use, rviz to specify the current location of the ground vehicle. Once this is done, everything in the rviz window should now appear. 
+
+### 11. Starting navigation
+Finally, to run navigation, run the following commands to start the navigation pipeline. 
+```
+cd CPSL_ROS2_Nav
+soruce install/setup.bash
+ros2 launch cpsl_nav nav2_backup.launch.py scan_topic:=/radar_combined/scan
+```
 ## Helpful Instructions
 
 ### 1. Running NoMachine in a headless (i.e.; without a monitor) mode
