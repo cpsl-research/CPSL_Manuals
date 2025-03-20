@@ -75,6 +75,14 @@ To setup NTP (network time protocol) on the compute board in order to synchroniz
     source install/setup.bash
     rosdep install -i --from-path src --rosdistro jazzy -y
     ```
+
+### 5. Installing additional ROS2 packages
+
+If you want to support SLAM, Navigation, Sensing, and Pointcloud processing, use the following links to install (or clone) the following additional repositories:
+1. [CPSL_ROS2_Sensors](https://github.com/cpsl-research/CPSL_ROS2_Sensors.git)
+2. [CPSL_ROS2_Nav](https://github.com/cpsl-research/CPSL_ROS2_Nav)
+3. [CPSL_ROS2_PCProcessing](https://github.com/cpsl-research/CPSL_ROS2_PCProcessing)
+
 ### 5. Setting ROS2 Middleware
 In order to connect to the Create3 using ROS, the correct MiddleWare and discovery settings must be applied.. The 1st option should work just fine, but you may need to try the second option as well 
 
