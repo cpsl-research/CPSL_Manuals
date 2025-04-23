@@ -191,7 +191,7 @@ If already configured, the sensors can be started using the following command:
 ```
 cd CPSL_ROS2_Sensors
 source install/setup.bash
-ros2 launch cpsl_ros2_sensors_bringup ugv_sensor_bringup.launch.py lidar_enable:=true lidar_scan_enable:=true camera_enable:=false radar_enable:=false platform_description_enable:=true rviz:=false namespace:=cpsl_ugv_1
+ros2 launch cpsl_ros2_sensors_bringup ugv_sensor_bringup.launch.py lidar_enable:=true lidar_scan_enable:=true camera_enable:=false radar_enable:=true platform_description_enable:=true rviz:=false namespace:=cpsl_ugv_1
 ```
 The parameters that can be used here are as follows: 
 | **Parameter** | **Default** | **Description** |  
@@ -311,6 +311,22 @@ cd CPSL_ROS2_Nav
 source install/setup.bash
 ros2 launch cpsl_nav nav2_backup.launch.py namespace:=cpsl_ugv_1 scan_topic:=/livox/scan
 ```
+
+### 12. Collecting a dataset
+
+For offline analysis or training, the following command can be used:
+```
+cd CPSL_ROS2_Sensors
+source install/setup.bash
+ros2 launch dataset_generator record_dataset.launch.py namespace:=cpsl_ugv_1 config:=ugv_dataset.yaml
+```
+
+The parameters that can be used by using the ```parameter:=value``` notation: 
+| **Parameter** | **Default** | **Description** |  
+|-----------|--------------------------|---------------------------------------------|  
+| `namespace`   | ''  | the namespace of the robot |  
+| `param_file`| 'ugv_dataset.yaml' | the .yaml config file in the configs directory of the dataset_generator package.
+
 ## Helpful Instructions
 
 ### 1. Running NoMachine in a headless (i.e.; without a monitor) mode
