@@ -308,9 +308,20 @@ ros2 launch cpsl_nav localization.launch.py scan_topic:=/radar_combined/scan map
 Finally, to run navigation, run the following commands to start the navigation pipeline. 
 ```
 cd CPSL_ROS2_Nav
-source install/setup.bash
-ros2 launch cpsl_nav nav2_backup.launch.py namespace:=cpsl_ugv_1 scan_topic:=/livox/scan
+soruce install/setup.bash
+ros2 launch cpsl_nav nav2.launch.py namespace:=cpsl_uav_1 params_file:=nav2_ugv.yaml
 ```
+
+When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
+| **Parameter** | **Default** | **Description** |
+|----------------|--------------|------------------------------------------------------|
+|`use_sim_time`|false|Use the time from a Gazebo simulation|
+|`namespace`|''|The robot's namespace|
+|`params_file`| "nav2_ugv.yaml" | the .yaml config to use in the config folder
+|`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
+|`use_lifecycle_manager`| false| Enable bond connection during node activation| 
+|`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
+|`rviz`|false|Display an RViz window with navigation|
 
 ### 12. Collecting a dataset
 
