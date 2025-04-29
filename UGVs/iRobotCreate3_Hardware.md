@@ -329,7 +329,7 @@ For offline analysis or training, the following command can be used:
 ```
 cd CPSL_ROS2_Sensors
 source install/setup.bash
-ros2 launch dataset_generator record_dataset.launch.py namespace:=cpsl_ugv_1 config:=ugv_dataset.yaml
+ros2 launch dataset_generator record_dataset.launch.py namespace:=cpsl_ugv_1 param_file:=ugv_dataset.yaml
 ```
 
 The parameters that can be used by using the ```parameter:=value``` notation: 
