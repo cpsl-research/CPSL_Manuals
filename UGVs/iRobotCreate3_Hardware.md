@@ -221,14 +221,14 @@ source install/setup.bash
 ```
 5. Finally, launch the ugv_gnn_bringup file
 ```
-ros2 launch pc_processing ugv_gnn_bringup.launch.py scan_enable:=true
+ros2 launch pc_processing ugv_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1
 ```
 
 When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
 | **Parameter** | **Default** | **Description** |
 |----------------|--------------|------------------------------------------------------|
 |`namespace`|''|The robot's namespace|
-|`param_file`| 'ugv_gnn.yaml'|YAML file with parameters for the nodes in the configs directory|
+|`param_file`| 'RaGNNarok_prob.yaml'|YAML file with parameters for the nodes in the configs directory|
 |`model_state_dict`| 'Sage_10fp_20fh_0_50_th_5mRng_0_2_res.pth'|.pth config file in the model_state_dicts folder|
 |`scan_enable`| 'false'|If enabled, additionally publish a /LaserScan message on the radar_combined/scan topic|
 
