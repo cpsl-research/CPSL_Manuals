@@ -186,7 +186,7 @@ When launching, the following parameters can also be set by using the `parameter
 |----------------|--------------|------------------------------------------------------|
 |`namespace`|''|The robot's namespace|
 
-### 2. Start all sensors with CPSL_ROS2_Sensors (radar disabled for now)
+### 7. Start all sensors with CPSL_ROS2_Sensors (radar disabled for now)
 If already configured, the sensors can be started using the following command:
 ```
 cd CPSL_ROS2_Sensors
@@ -287,6 +287,9 @@ Once finished, open Rviz and use the slam rviz configuration in the cpsl_ros2_na
 To save the serialized map to a file, use the following code: 
 ```
 ros2 service call /cpsl_ugv_1/slam_toolbox/serialize_map slam_toolbox/SerializePoseGraph "{filename: 'uav_map'}"
+
+#or
+ros2 service call /cpsl_ugv_1/slam_toolbox/save_map slam_toolbox/SaveMap "{name: {data: 'cpsl_map'}}"
 ```
 
 ### 10. Starting localization (radar)
@@ -300,7 +303,7 @@ In stead of SLAM, you can run a localization pipeline and navigation (see next s
 ```
 cd CPSL_ROS2_Nav
 source install/setup.bash
-ros2 launch cpsl_nav localization.launch.py scan_topic:=/radar_combined/scan map:=wilk_radar.yaml param_file:=localization_radar.yaml
+ros2 launch cpsl_nav localization.launch.py scan_topic:=/cpsl_ugv_1/radar_combined/scan map:=cpsl_radar.yaml param_file:=localization_radar.yaml
 ```
 4. Once launched, you will then have to set a start location. Wait for the map to appear in the rviz window. Then use, rviz to specify the current location of the ground vehicle. Once this is done, everything in the rviz window should now appear. 
 
@@ -309,7 +312,7 @@ Finally, to run navigation, run the following commands to start the navigation p
 ```
 cd CPSL_ROS2_Nav
 soruce install/setup.bash
-ros2 launch cpsl_nav nav2.launch.py namespace:=cpsl_uav_1 params_file:=nav2_ugv.yaml
+ros2 launch cpsl_nav nav2.launch.py namespace:=cpsl_ugv_1 params_file:=nav2_ugv.yaml
 ```
 
 When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
