@@ -1,27 +1,27 @@
 # iRobot Create 3 (Hardware Usage) User Manual
 
-## - For Using iRobotCreate3 on Raspberri Pi5 with ROS2 Jazzy on Ubuntu 24.04
+## - For Using iRobotCreate3 on GMKtec Nuc with ROS2 Jazzy on Ubuntu 24.04
 
-The following steps can be used to scontrol an iRobot Create3 with the following versions/software.
+The following steps can be used to control an iRobot Create3 with the following versions/software.
 
 - ROS Version: ROS2 Jazzy
 - Ubuntu Version: Ubuntu 24.04
 
-## [Setup/Installation] with RPi5 (ROS2 Jazzy)
+## [Setup/Installation] with Nuc (ROS2 Jazzy)
 
 ### 1. Install and Setup Ubuntu 24.04
 
-1. Use the Raspberry Pi Imager (available here: [Raspberry Pi Imager](https://www.raspberrypi.com/software/)) to install Ubuntu 24.04 LTS Desktop onto the RPi 5, and follow the instructions to complete the installation
+1. [If you are using a Raspberry Pi] the Raspberry Pi Imager (available here: [Raspberry Pi Imager](https://www.raspberrypi.com/software/)) to install Ubuntu 24.04 LTS Desktop onto the RPi 5, and follow the instructions to complete the installation
 
 2. Once Ubuntu is installed, additionally install NoMachine by using the following instructions:
-    - Go to [Nomachine Download](https://downloads.nomachine.com/), and click on the NoMachine for ARM (for RPi5) link. From there, click on the "NoMachine for ARMv8" "DEB" file which will work for ubuntu.
+    - Go to [Nomachine Download](https://downloads.nomachine.com/), and click on the NoMachine for ARM (for Nuc) link. From there, click on the "NoMachine for ARMv8" "DEB" file which will work for Ubuntu.
     -  Follow the instructions on the download page (see here: [instructions](https://downloads.nomachine.com/download/?id=115&distro=ARM))
     - Finally, to run NoMachine in a headless (i.e. without a monitor) mode, see the instructions below under "Helpful Instructions"
-    - Once NoMachine is installed on the RPi5, you must also install it on your local machine to access the remote display. NOTE: If you are located at another location, you must connect via the Duke VPN to access the RPi5 remotely.
+    - Once NoMachine is installed on the Nuc, you must also install it on your local machine to access the remote display. NOTE: If you are located at another location, you must connect via the Duke VPN to access the Nuc remotely.
 
-### 2. Setup Rpi5 Ethernet Interface
+### 2. Setup Nuc Ethernet Interface
 
-1. The create3 communicates with the RPi5 using ethernet over usb-c. If you are powering the RPi5 via the create3's USB-C port, please follow the following steps to activate the RPI5's ethernet over USB-C port:
+1. The create3 communicates with the Nuc using ethernet over USB. If you are powering the Nuc via the create3's USB-C port, please follow the following steps to activate the Nuc's ethernet over USB port:
     
     - open the /boot/firmware/config.txt file and add the following lines to the end of the file
     ```
@@ -31,7 +31,7 @@ The following steps can be used to scontrol an iRobot Create3 with the following
     ```
     modules-load=dwc2,g_ether
     ```
-    - Finally, we will setup the USB-C ethernet port to work with the RPI5. To do so, open the /etc/netplan/50-cloud-init.yaml file and add the following text (correct indents as needed):
+    - Finally, we will set up the USB ethernet port to work with the Nuc. To do so, open the /etc/netplan/50-cloud-init.yaml file and add the following text (correct indents as needed):
     ```
         usb0:
             dhcp4: false
@@ -43,12 +43,12 @@ The following steps can be used to scontrol an iRobot Create3 with the following
     sudo netplan generate
     sudo netplan apply
     ```
-3. On the iRobot Create3, ensure that the USB/BLE toggle is set to "USB" and not BLE mode(see [Create 3 Adapter Board Documentation ](https://iroboteducation.github.io/create3_docs/hw/adapter/) for how to do this).
-4. At this point, you should be able to go to ```192.168.186.2``` in a browser on the RPI5 and see the consul. If this is successful, then the ethernet connection on the RPi5 has successfully been connected to the Create3.
+2. On the iRobot Create3, ensure that the USB/BLE toggle is set to "USB" and not BLE mode(see [Create 3 Adapter Board Documentation ](https://iroboteducation.github.io/create3_docs/hw/adapter/) for how to do this).
+3. At this point, you should be able to go to ```192.168.186.2``` in a browser on the Nuc and see the consul. If this is successful, then the ethernet connection on the Nuc has successfully been connected to the Create3.
 
 ### 3. Setup Network Time Protocol for Create3
-To setup NTP (network time protocol) on the compute board in order to synchronize time between the create3 and the RPI5. To do so, follow the instructions found at the [Creat 3 NTP Setup Documentation](https://iroboteducation.github.io/create3_docs/setup/compute-ntp/)
-- Note that the create3 may not initially synchronize with the RPi5 and that the ```sudo chronyc clients``` may not immediately return any clients.
+To setup NTP (network time protocol) on the compute board in order to synchronize time between the create3 and the Nuc. To do so, follow the instructions found at the [Create 3 NTP Setup Documentation](https://iroboteducation.github.io/create3_docs/setup/compute-ntp/)
+- Note that the create3 may not initially synchronize with the Nuc and that the ```sudo chronyc clients``` may not immediately return any clients.
 
 ### 4. Install ROS2 Jazzy
 1. Install ROS2 Jazzy by following the instructions here: [ROS2 Jazzy Installation Guide](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
@@ -67,7 +67,7 @@ To setup NTP (network time protocol) on the compute board in order to synchroniz
     git submodule update --init --recursive
     ```
 
-    Once, cloned, the following commands can be used to build/install the necessary packages
+    Once cloned, the following commands can be used to build/install the necessary packages
 
     ```
     cd CPSL_ROS2_Create3
@@ -83,7 +83,7 @@ If you want to support SLAM, Navigation, Sensing, and Pointcloud processing, use
 2. [CPSL_ROS2_Nav](https://github.com/cpsl-research/CPSL_ROS2_Nav)
 3. [CPSL_ROS2_PCProcessing](https://github.com/cpsl-research/CPSL_ROS2_PCProcessing)
 
-### 5. Setting ROS2 Middleware
+### 6. Setting ROS2 Middleware
 In order to connect to the Create3 using ROS, the correct MiddleWare and discovery settings must be applied.. The 1st option should work just fine, but you may need to try the second option as well 
 
 #### Option 1: Default
@@ -127,22 +127,26 @@ export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 export FASTRTPS_DEFAULT_PROFILES_FILE=/home/cpsl/Documents/fast_dds.xml
 ```
 3. Once this is completed, you should be able to follow the "Nominal Startup of RPi5 + Create3" instructions to confirm that everything is setup correctly. 
-## [Nominal Startup/Running] of RPi5 + Create3:
+## [Nominal Startup/Running] of Nuc + Create3:
 Once everything is installed, the following steps can be followed to use the iRobotCreate3:
 
 ### 1. Connecting to the iRobotCreate3
 
-1. Power/Reboot RPi5
-2. [If in headless mode] Restart the Nomachine/GDM server to be able to access NoMachine
+1. Power/Reboot Nuc
+2. Restart the Nomachine/GDM server to be able to access NoMachine, run the following commands on the server's terminal:
+```
+sudo systemctl stop gdm
+sudo /etc/NX/nxserver --restart
+```
 3. Restart/check the NTP server
 ```
 sudo service chrony restart
 sudo chronyc clients
 ```
-4. Open a browser on the RPi5 and go to ```192.168.186.2``` (this is the interface for the create3)
+4. Open a browser on the Nuc and go to ```192.168.186.2``` (this is the interface for the create3)
 5. Go to Application->Restart Application to restart the create3's application. This will take a few minutes, and the restart is complete after the robot makes a noise.
 6. If everything went well, you should be able to confirm that the Create3 is connected via ROS2 by using the following command: ```ros2 node list```. If this command doesn't return anything, try the following solutions:
-    - Log out and then back into the RPi5
+    - Log out and then back into the Nuc
     - Restart the NTP server again and wait until there is a confirmed connection with Create3 (should take a few minutes)
 
 ### 2. Undocking the robot:
@@ -154,7 +158,7 @@ ros2 action send_goal /cpsl_ugv_1/undock irobot_create_msgs/action/Undock "{}"
 ```
 
 ### 3. Docking the robot:
-Once donce with the robot, send the following action command to redock the robot:
+Once done with the robot, send the following action command to redock the robot:
 ```
 #(replace /cpsl_ugv_1 with the namespace of the UGV)
 ros2 action send_goal /cpsl_ugv_1/dock irobot_create_msgs/action/Dock "{}"
@@ -174,7 +178,7 @@ cd CPSL_ROS2_Create3
 source install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpsl_ugv_1/cmd_vel
 ```
-### 6. Bringup remaining Create3 functionality
+### 6. Bring up remaining Create3 functionality
 To start the remaining UGV functionality, I've conveniently written a simple bringup package. It does things like re-publish the necessary tf tree information. To run this, run the following command. 
 ```
 cd CPSL_ROS2_Create3
@@ -215,11 +219,11 @@ cd CPSL_ROS2_PCProcessing
 ```
 poetry shell
 ```
-4. Source the setup.bash file
+3. Source the setup.bash file
 ```
 source install/setup.bash
 ```
-5. Finally, launch the ugv_gnn_bringup file
+4. Finally, launch the ugv_gnn_bringup file
 ```
 ros2 launch pc_processing ugv_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1
 ```
@@ -247,7 +251,7 @@ When launching, the following parameters can also be set by using the `parameter
 | **Parameter** | **Default** | **Description** |
 |----------------|--------------|------------------------------------------------------|
 |`use_sim_time`|false|Use the time from a Gazebo simulation|
-|`sync`|true|use synchronous SLAM (slower than asyncrhonous SLAM)|
+|`sync`|true|use synchronous SLAM (slower than asynchronous SLAM)|
 |`namespace`|''|The robot's namespace|
 |`scan_topic`|'/scan'|The LaserScan topic to use for slam (`/radar_combined/scan` for radar, `/livox/scan/` for lidar)|
 |`autostart`|true| Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.|
@@ -256,7 +260,7 @@ When launching, the following parameters can also be set by using the `parameter
 |`rviz`|false|Display an RViz window with navigation|
 
 Once finished, open Rviz and use the slam rviz configuration in the cpsl_ros2_nav2 package to view/save the map.
-    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and slick the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
+    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and click the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
 
 ### 9. Starting SLAM Stack (lidar)
 Once sensors are running, the following steps can start the SLAM pipeline:
@@ -282,7 +286,7 @@ When launching, the following parameters can also be set by using the `parameter
 |`rviz`|false|Display an RViz window with navigation|
 
 Once finished, open Rviz and use the slam rviz configuration in the cpsl_ros2_nav2 package to view/save the map.
-    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and slick the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
+    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and click the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
 
 To save the serialized map to a file, use the following code: 
 ```
@@ -293,13 +297,13 @@ ros2 service call /cpsl_ugv_1/slam_toolbox/save_map slam_toolbox/SaveMap "{name:
 ```
 
 ### 10. Starting localization (radar)
-In stead of SLAM, you can run a localization pipeline and navigation (see next step). To start localizaiton, Run the following steps:
+Instead of SLAM, you can run a localization pipeline and navigation (see next step). To start localization, Run the following steps:
 
 1. Open RVIZ2 and use the either the nav_config.rviz or slam_config.rviz files in CPSL_ROS2_Nav/src/cpsl_nav/rviz_cfgs. This must be done first in order for the map to appear. When started, you will not see anything until the next step as the nav2 pipeline publishes the map->odom transformation.
 
-2. Drive the UGV around to make sure that the point clouds are publishing correclty. 
+2. Drive the UGV around to make sure that the point clouds are publishing correctly. 
 
-3. run the following commands. Change the map file to be the name of a map in the CPSL_ROS2_Nav/src/cpsl_nav/maps folder. 
+3. Run the following commands. Change the map file to be the name of a map in the CPSL_ROS2_Nav/src/cpsl_nav/maps folder. 
 ```
 cd CPSL_ROS2_Nav
 source install/setup.bash
@@ -343,21 +347,14 @@ The parameters that can be used by using the ```parameter:=value``` notation:
 
 ## Helpful Instructions
 
-### 1. Running NoMachine in a headless (i.e.; without a monitor) mode
-Note, the following instructions only need to be performed once. To run NoMachine in a headless mode, running the following commands on the server's terminal:
-```
-sudo systemctl stop gdm
-sudo /etc/NX/nxserver --restart
-```
-
-### 2. Starting RViz on edge server
+### 1. Starting RViz on edge server
 ```
 rviz2 --ros-args --remap /tf:=/forwarded_tf
 ```
 
 
 ## Helpful Documentation
-- [Create 3 RPi4 Setup Guide](https://iroboteducation.github.io/create3_docs/setup/pi4humble/): Note that this guide is meant for RPi4 running Ubuntu 22.04, as its recommended to only use this as reference and instead follow the instructions above if you need help.
+- [Create 3 RPi4 Setup Guide](https://iroboteducation.github.io/create3_docs/setup/pi4humble/): Note that this guide is meant for RPi4 running Ubuntu 22.04, as it is recommended to only use this as a reference and instead follow the instructions above if you need help.
 - [Create 3 Adapter Board Documentation ](https://iroboteducation.github.io/create3_docs/hw/adapter/)
 - [Creat 3 NTP Setup](https://iroboteducation.github.io/create3_docs/setup/compute-ntp/)
 - [Create 3 Fast-DDS setup](https://iroboteducation.github.io/create3_docs/setup/xml-config/)
