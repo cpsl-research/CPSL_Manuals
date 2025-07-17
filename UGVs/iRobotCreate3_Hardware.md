@@ -170,8 +170,14 @@ If you want to reset the pose to a specific location, you can use the following 
 #(replace /cpsl_ugv_1 with the namespace of the UGV)
 ros2 service call /cpsl_ugv_1/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
 ```
+### 5a. TMUX startup file(optional)
 
-### 5. Controlling the vehicle with keyboard operation
+Run this to run steps 5 to 8 and open a TMUX window with the panes configured with the steps in different panes
+```
+./UGV_Start.sh
+```
+
+### 5b. Controlling the vehicle with keyboard operation
 ```
 #(replace /cpsl_ugv_1 with the namespace of the UGV)
 cd CPSL_ROS2_Create3
