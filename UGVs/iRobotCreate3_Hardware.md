@@ -231,7 +231,10 @@ source install/setup.bash
 ```
 4. Finally, launch the ugv_gnn_bringup file
 ```
-ros2 launch pc_processing ugv_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1
+#for probabilitic grid
+ros2 launch pc_processing ugv_gnn_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1 param_file:=RaGNNarok_prob.yaml
+#for gnn model
+ros2 launch pc_processing ugv_gnn_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1 param_file:=RaGNNarok_gnn.yaml
 ```
 
 When launching, the following parameters can also be set by using the `parameter:=value` notation after the name of the launch file:
@@ -265,8 +268,13 @@ When launching, the following parameters can also be set by using the `parameter
 |`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
 |`rviz`|false|Display an RViz window with navigation|
 
-Once finished, open Rviz and use the slam rviz configuration in the cpsl_ros2_nav2 package to view/save the map.
-    - If rviz is displayed, go into the SlamToolboxPlugin Window, specify the file name (e.g.;"building_1") without the .yaml/.pgm. and click the "Save Map" button. The file will be saved in the current directory (CPSL_ROS2_Nav)
+To save the serialized map to a file, use the following code: 
+```
+ros2 service call /cpsl_ugv_1/slam_toolbox/serialize_map slam_toolbox/SerializePoseGraph "{filename: 'uav_map'}"
+
+#or
+ros2 service call /cpsl_ugv_1/slam_toolbox/save_map slam_toolbox/SaveMap "{name: {data: 'cpsl_map'}}"
+```
 
 ### 9. Starting SLAM Stack (lidar)
 Once sensors are running, the following steps can start the SLAM pipeline:
@@ -313,15 +321,27 @@ Instead of SLAM, you can run a localization pipeline and navigation (see next st
 ```
 cd CPSL_ROS2_Nav
 source install/setup.bash
-ros2 launch cpsl_nav localization.launch.py scan_topic:=/cpsl_ugv_1/radar_combined/scan map:=cpsl_radar.yaml param_file:=localization_radar.yaml
+ros2 launch cpsl_nav localization.launch.py namespace:=cpsl_ugv_1 scan_topic:=/radar_combined/scan map:=cpsl_radar.yaml param_file:=localization_radar.yaml base_frame_id:=base_link
 ```
+| **Parameter** | **Default** | **Description** |
+|----------------|--------------|------------------------------------------------------|
+|`namespace`|''|Top-level namespace|
+|`map`|'cpsl.yaml'|yaml file in the cpsl_nav/maps folder with map information|
+|`scan_topic`|'/scan'|The LaserScan topic to use for slam (without the namespace)|
+|`base_frame_id`|'base_link'|The frame ID of the base_link frame (without tf pre-fix)|
+|`use_sim_time`|false|Use simulation (Gazebo) clock if true|
+|`params_file`| 'localization.yaml' | Full path to the ROS2 parameters file in the cpsl_nav/config|
+|`autostart`|true| Automatically startup the nav2 stack|
+|`use_respawn`|false|Whether to respawn if a node crashes. Applied when composition is disabled.|
+|`log_level`|'info'|log level|
+
 4. Once launched, you will then have to set a start location. Wait for the map to appear in the rviz window. Then use, rviz to specify the current location of the ground vehicle. Once this is done, everything in the rviz window should now appear. 
 
 ### 11. Starting navigation
 Finally, to run navigation, run the following commands to start the navigation pipeline. 
 ```
 cd CPSL_ROS2_Nav
-soruce install/setup.bash
+source install/setup.bash
 ros2 launch cpsl_nav nav2.launch.py namespace:=cpsl_ugv_1 params_file:=nav2_ugv.yaml
 ```
 
