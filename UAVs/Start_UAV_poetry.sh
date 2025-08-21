@@ -39,6 +39,8 @@ if [ $? != 0 ]; then
 
     echo "setting up UAV sensors..."
     tmux send-keys -t $SESSION_NAME:0.2 "cd CPSL_ROS2_Sensors" C-m
+    tmux send-keys -t $SESSION_NAME:0.2 "eval \$(poetry env activate)" C-m
+    sleep 1
     tmux send-keys -t $SESSION_NAME:0.2 "source install/setup.bash" C-m
     tmux send-keys -t $SESSION_NAME:0.2 "nice -n -10 ros2 launch cpsl_ros2_sensors_bringup uav_sensor_bringup.launch.py lidar_enable:=false lidar_scan_enable:=true camera_enable:=false front_radar_enable:=true down_radar_enable:=true platform_description_enable:=true rviz:=false namespace:=cpsl_uav_1"
 
