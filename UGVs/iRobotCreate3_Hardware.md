@@ -133,19 +133,15 @@ Once everything is installed, the following steps can be followed to use the iRo
 ### 1. Connecting to the iRobotCreate3
 
 1. Power/Reboot Nuc
-2. Restart the Nomachine/GDM server to be able to access NoMachine, run the following commands on the server's terminal:
-```
-sudo systemctl stop gdm
-sudo /etc/NX/nxserver --restart
-```
-3. Restart/check the NTP server
+
+2. Restart/check the NTP server
 ```
 sudo service chrony restart
 sudo chronyc clients
 ```
-4. Open a browser on the Nuc and go to ```192.168.186.2``` (this is the interface for the create3)
-5. Go to Application->Restart Application to restart the create3's application. This will take a few minutes, and the restart is complete after the robot makes a noise.
-6. If everything went well, you should be able to confirm that the Create3 is connected via ROS2 by using the following command: ```ros2 node list```. If this command doesn't return anything, try the following solutions:
+3. Open a browser on the Nuc and go to ```192.168.186.2``` (this is the interface for the create3)
+4. Go to Application->Restart Application to restart the create3's application. This will take a few minutes, and the restart is complete after the robot makes a noise.
+5. If everything went well, you should be able to confirm that the Create3 is connected via ROS2 by using the following command: ```ros2 node list```. If this command doesn't return anything, try the following solutions:
     - Log out and then back into the Nuc
     - Restart the NTP server again and wait until there is a confirmed connection with Create3 (should take a few minutes)
 
@@ -164,27 +160,29 @@ Once done with the robot, send the following action command to redock the robot:
 ros2 action send_goal /cpsl_ugv_1/dock irobot_create_msgs/action/Dock "{}"
 ```
 
-### 4. Resetting the robot pose (say at a particular origin)
-If you want to reset the pose to a specific location, you can use the following service
-```
-#(replace /cpsl_ugv_1 with the namespace of the UGV)
-ros2 service call /cpsl_ugv_1/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
-```
-### 5a. TMUX startup file(optional)
+### 4. Easy TMUX startup file(optional)
 
 Run this to run steps 5 to 8 and open a TMUX window with the panes configured with the steps in different panes
 ```
 ./UGV_Start.sh
 ```
 
-### 5b. Controlling the vehicle with keyboard operation
+### 5. Resetting the robot pose (say at a particular origin)
+If you want to reset the pose to a specific location, you can use the following service
+```
+#(replace /cpsl_ugv_1 with the namespace of the UGV)
+ros2 service call /cpsl_ugv_1/reset_pose irobot_create_msgs/srv/ResetPose "pose: {position: {x: 0, y: 0, z: 0}, orientation: {x: 0, y: 0, z: 0, w: 1}}"
+```
+
+
+### 6. Controlling the vehicle with keyboard operation
 ```
 #(replace /cpsl_ugv_1 with the namespace of the UGV)
 cd CPSL_ROS2_Create3
 source install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/cpsl_ugv_1/cmd_vel
 ```
-### 6. Bring up remaining Create3 functionality
+### 7. Bring up remaining Create3 functionality
 To start the remaining UGV functionality, I've conveniently written a simple bringup package. It does things like re-publish the necessary tf tree information. To run this, run the following command. 
 ```
 cd CPSL_ROS2_Create3
@@ -196,7 +194,7 @@ When launching, the following parameters can also be set by using the `parameter
 |----------------|--------------|------------------------------------------------------|
 |`namespace`|''|The robot's namespace|
 
-### 7. Start all sensors with CPSL_ROS2_Sensors (radar disabled for now)
+### 8. Start all sensors with CPSL_ROS2_Sensors (radar disabled for now)
 If already configured, the sensors can be started using the following command:
 ```
 cd CPSL_ROS2_Sensors
@@ -214,7 +212,7 @@ The parameters that can be used here are as follows:
 | `platform_description_enable`| true | On true, publishes the UGV robot description tf tree
 | `rviz`| true | On True, displays an RViz window of sensor data
 
-### 8. Start GNN ROS2 Nodes
+### 9. Start GNN ROS2 Nodes
 If the CPSL_ROS2_PCProcessing package has already been setup, the following code will start the relevant Nodes
 
 1. go into the CPSL_ROS2_PC_Processing directory
@@ -245,7 +243,7 @@ When launching, the following parameters can also be set by using the `parameter
 |`model_state_dict`| 'Sage_10fp_20fh_0_50_th_5mRng_0_2_res.pth'|.pth config file in the model_state_dicts folder|
 |`scan_enable`| 'false'|If enabled, additionally publish a /LaserScan message on the radar_combined/scan topic|
 
-### 9. Starting SLAM Stack (radar)
+### 10. Starting SLAM Stack (radar)
 Once sensors are running, the following steps can start the SLAM pipeline:
 
 1. Before takeoff, use the steps at the end of this document to reset the ekf2 on the px4. When performing slam, it is important that mapping start at the origin (i.e.: UAV is as close as possible to 0,0).
@@ -276,7 +274,7 @@ ros2 service call /cpsl_ugv_1/slam_toolbox/serialize_map slam_toolbox/SerializeP
 ros2 service call /cpsl_ugv_1/slam_toolbox/save_map slam_toolbox/SaveMap "{name: {data: 'cpsl_map'}}"
 ```
 
-### 9. Starting SLAM Stack (lidar)
+### 11. Starting SLAM Stack (lidar)
 Once sensors are running, the following steps can start the SLAM pipeline:
 
 1. Before takeoff, use the steps at the end of this document to reset the ekf2 on the px4. When performing slam, it is important that mapping start at the origin (i.e.: UAV is as close as possible to 0,0).
@@ -310,7 +308,7 @@ ros2 service call /cpsl_ugv_1/slam_toolbox/serialize_map slam_toolbox/SerializeP
 ros2 service call /cpsl_ugv_1/slam_toolbox/save_map slam_toolbox/SaveMap "{name: {data: 'cpsl_map'}}"
 ```
 
-### 10. Starting localization (radar)
+### 12. Starting localization (radar)
 Instead of SLAM, you can run a localization pipeline and navigation (see next step). To start localization, Run the following steps:
 
 1. Open RVIZ2 and use the either the nav_config.rviz or slam_config.rviz files in CPSL_ROS2_Nav/src/cpsl_nav/rviz_cfgs. This must be done first in order for the map to appear. When started, you will not see anything until the next step as the nav2 pipeline publishes the map->odom transformation.
@@ -337,7 +335,7 @@ ros2 launch cpsl_nav localization.launch.py namespace:=cpsl_ugv_1 scan_topic:=/r
 
 4. Once launched, you will then have to set a start location. Wait for the map to appear in the rviz window. Then use, rviz to specify the current location of the ground vehicle. Once this is done, everything in the rviz window should now appear. 
 
-### 11. Starting navigation
+### 13. Starting navigation
 Finally, to run navigation, run the following commands to start the navigation pipeline. 
 ```
 cd CPSL_ROS2_Nav
@@ -356,7 +354,7 @@ When launching, the following parameters can also be set by using the `parameter
 |`slam_params_file`| 'slam.yaml'|Path to the SLAM Toolbox configuration file|
 |`rviz`|false|Display an RViz window with navigation|
 
-### 12. Collecting a dataset
+### 14. Collecting a dataset
 
 For offline analysis or training, the following command can be used:
 ```
