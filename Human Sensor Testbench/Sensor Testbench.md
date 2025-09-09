@@ -146,6 +146,11 @@ This only needs to be performed the first time you use the radar on your system.
 
 ## 8. Running the Human Sensor Testbench
 
+**Note:** You can either run the following commands manually in separate terminals as described below, or use the tmux script to launch all required panes and processes automatically by running:
+> ```bash
+> ./StartSensorTestbench.sh
+> ```
+
 ### 1. Start All Sensors
 Open a terminal and run:
 ```bash
