@@ -30,7 +30,7 @@ if [ $? != 0 ]; then
     tmux send-keys -t $SESSION_NAME:0.2 "eval \$(poetry env activate)" C-m
     sleep 1
     tmux send-keys -t $SESSION_NAME:0.2 "source install/setup.bash" C-m
-    tmux send-keys -t $SESSION_NAME:0.2 "ros2 launch dataset_generator record_dataset.launch.py param_file:=human_movement.yaml namespace:=$PLATFORM_NAME"
+    tmux send-keys -t $SESSION_NAME:0.2 "ros2 launch dataset_generator record_dataset.launch.py param_file:=human_movement.yaml namespace:=$PLATFORM_NAME dataset_name:=FirstLast_exo_high"
 
     #setting up leap motion viewer
     echo "setting up leap motion viewer..."

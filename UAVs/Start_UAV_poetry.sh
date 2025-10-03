@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SESSION_NAME="ROS"
-PLATFORM_NAME="cpsl_uav_1"
+PLATFORM_NAME="cpsl_uav_6"
 
 tmux has-session -t $SESSION_NAME 2>/dev/null
 
@@ -54,17 +54,20 @@ if [ $? != 0 ]; then
     tmux send-keys -t $SESSION_NAME:0.3 "ros2 launch mmwave_radar_processing_ros flow_estimator_points_bringup.launch.py namespace:=$PLATFORM_NAME"
 
     echo "setting up PC Processing (GNN)"
-    tmux send-keys -t $SESSION_NAME:0.5 "cd CPSL_ROS2_PCProcessing" C-m
-    tmux send-keys -t $SESSION_NAME:0.5 "eval \$(poetry env activate)" C-m
+    tmux send-keys -t $SESSION_NAME:0.4 "cd CPSL_ROS2_PCProcessing" C-m
+    tmux send-keys -t $SESSION_NAME:0.4 "eval \$(poetry env activate)" C-m
     sleep 1
-    tmux send-keys -t $SESSION_NAME:0.5 "source install/setup.bash" C-m
+    tmux send-keys -t $SESSION_NAME:0.4 "source install/setup.bash" C-m
     sleep 1
-    tmux send-keys -t $SESSION_NAME:0.5 "ros2 launch pc_processing uav_gnn_bringup.launch.py scan_enable:=true namespace:=$PLATFORM_NAME" 
+    tmux send-keys -t $SESSION_NAME:0.4 "ros2 launch pc_processing ugv_bringup.launch.py scan_enable:=true namespace:=$PLATFORM_NAME" 
 
     echo "setting up SLAM (lidar for now)"
-    tmux send-keys -t $SESSION_NAME:0.6 "cd CPSL_ROS2_Nav" C-m
-    tmux send-keys -t $SESSION_NAME:0.6 "source install/setup.bash" C-m
-    tmux send-keys -t $SESSION_NAME:0.6 "ros2 launch cpsl_nav slam_sync.launch.py slam_params_file:=slam_athena.yaml scan_topic:=/livox/scan namespace:=$PLATFORM_NAME base_frame_id:=base_footprint"
+    tmux send-keys -t $SESSION_NAME:0.5 "cd CPSL_ROS2_Nav" C-m
+    tmux send-keys -t $SESSION_NAME:0.5 "source install/setup.bash" C-m
+    tmux send-keys -t $SESSION_NAME:0.5 "ros2 launch cpsl_nav slam_sync.launch.py slam_params_file:=slam_athena.yaml scan_topic:=/livox/scan namespace:=$PLATFORM_NAME base_frame_id:=base_footprint repub_map:=true"
+
+    echo "setting up map saving"
+    tmux send-keys -t $SESSION_NAME:0.6 "ros2 service call /$PLATFORM_NAME/slam_toolbox/save_map slam_toolbox/srv/SaveMap \"{name: {data: 'test'}}\""
 
     echo "setting up navigation (lidar)"
     tmux send-keys -t $SESSION_NAME:0.7 "cd CPSL_ROS2_Nav" C-m
