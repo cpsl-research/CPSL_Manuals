@@ -74,14 +74,7 @@ This repository includes a pre-configured `.zshrc` file tailored for development
     ```
 
 ### Theme: Agnoster
-The configuration uses the `agnoster` theme, which provides a informative prompt with Git status integration.
-
-**Important:** The `agnoster` theme requires Powerline-patched fonts to render special characters (like arrows and git symbols) correctly.
-
-Install Powerline fonts on Ubuntu:
-```bash
-sudo apt install fonts-powerline
-```
+The configuration uses the `af-magic` theme, which provides a informative prompt with Git status integration.
 
 ### Enabled Plugins
 The recommended configuration enables the following plugins:
