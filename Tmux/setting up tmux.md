@@ -65,6 +65,10 @@ set -g @menus_trigger 'Space'  # setup menus
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
+#specify the shell to use (uncomment one or the other to choose zsh or bash)
+#set-option -g default-shell /bin/zsh
+set-option -g default-shell /bin/bash
+
 Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X` in nano).
 
 ---
