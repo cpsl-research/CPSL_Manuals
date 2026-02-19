@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -72,6 +72,7 @@ ENABLE_CORRECTION="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
+    history-substring-search
     pip
     python
     ubuntu
@@ -80,6 +81,10 @@ plugins=(
     poetry
     poetry-env
 )
+
+# Bind up/down arrows to search history based on what you've already typed
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 source $ZSH/oh-my-zsh.sh
 
