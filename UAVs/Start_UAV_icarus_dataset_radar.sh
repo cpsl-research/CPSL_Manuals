@@ -36,7 +36,7 @@ if [ $? != 0 ]; then
     tmux send-keys -t $SESSION_NAME:0.2 "eval \$(poetry env activate)" C-m
     sleep 1
     tmux send-keys -t $SESSION_NAME:0.2 "source install/setup.zsh" C-m
-    tmux send-keys -t $SESSION_NAME:0.2 "nice -n -10 ros2 launch cpsl_ros2_sensors_bringup uav_sensor_bringup_IcaRAus.launch.py lidar_enable:=false lidar_scan_enable:=false camera_enable:=false front_radar_enable:=true back_radar_enable:=true down_radar_enable:=true platform_description_enable:=true rviz:=false namespace:=$PLATFORM_NAME vicon_enable:=false" C-m
+    tmux send-keys -t $SESSION_NAME:0.2 "nice -n -10 ros2 launch cpsl_ros2_sensors_bringup uav_sensor_bringup_IcaRAus.launch.py lidar_enable:=false lidar_scan_enable:=false camera_enable:=false front_radar_enable:=true back_radar_enable:=true down_radar_enable:=true platform_description_enable:=true rviz:=false namespace:=$PLATFORM_NAME vicon_enable:=true" C-m
     sleep 30
     echo "sensors setup complete"
 
@@ -63,7 +63,7 @@ if [ $? != 0 ]; then
     echo "setting up dataset collection"
     tmux send-keys -t $SESSION_NAME:0.5 "cd CPSL_ROS2_Sensors" C-m
     tmux send-keys -t $SESSION_NAME:0.5 "source install/setup.zsh" C-m
-    tmux send-keys -t $SESSION_NAME:0.5 "ros2 launch dataset_generator record_dataset.launch.py namespace:=$PLATFORM_NAME param_file:=uav_dataset_radar_vs_flow.yaml dataset_subpath:=north_1"
+    tmux send-keys -t $SESSION_NAME:0.5 "ros2 launch dataset_generator record_dataset.launch.py namespace:=$PLATFORM_NAME param_file:=uav_dataset_icaraus_dataset_radar.yaml dataset_subpath:=vicon_box_1"
 
     tmux select-pane -t $SESSION_NAME:0.5
 fi

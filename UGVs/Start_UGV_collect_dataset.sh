@@ -45,12 +45,14 @@ if [ $? != 0 ]; then
     echo "sensors setup complete"
 
 
-    # echo "Starting UGV point cloud processing..."
-    # tmux send-keys -t $SESSION_NAME:0.4 "cd CPSL_ROS2_PCProcessing && eval \$(poetry env activate)" C-m
-    # sleep 1
-    # tmux send-keys -t $SESSION_NAME:0.4 "source install/setup.bash" C-m
-    # sleep 1
-    # tmux send-keys -t $SESSION_NAME:0.4 "ros2 launch pc_processing ugv_IcaRAus_gnn_bringup.launch.py scan_enable:=true namespace:=cpsl_ugv_1"
+    echo "Starting UGV point cloud processing..."
+    tmux send-keys -t $SESSION_NAME:0.4 "cd CPSL_ROS2_PCProcessing && eval \$(poetry env activate)" C-m
+    sleep 1
+    tmux send-keys -t $SESSION_NAME:0.4 "source install/setup.bash" C-m
+    sleep 1
+    tmux send-keys -t $SESSION_NAME:0.4 "ros2 launch pc_processing ugv_pc_combiner_bringup.launch.py namespace:=cpsl_ugv_1" C-m
+    sleep 10
+    echo "point cloud processing setup complete"
 
     echo "setting up SLAM (lidar for now)"
     tmux send-keys -t $SESSION_NAME:0.5 "cd CPSL_ROS2_Nav" C-m
